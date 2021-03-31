@@ -3,6 +3,8 @@ package modelo;
 import java.util.ArrayList;
 import java.util.List;
 
+import excecao.ExplosaoException;
+
 public class Campo {
 	
 	private boolean minado;
@@ -15,13 +17,13 @@ public class Campo {
 	private List<Campo> vizinhos = new ArrayList<>();
 	
 	
-	  public Campo (int linha, int coluna) {
+	  public Campo(int linha, int coluna) {
+		super();
 		this.linha = linha;
 		this.coluna = coluna;
-		
 	}
-	
-	boolean adicionarVizinho(Campo vizinho) {
+		
+	public boolean adicionarVizinho(Campo vizinho) {
 		boolean linhaDiferente = linha != vizinho.linha;
 		boolean colunaDiferente = coluna != vizinho.coluna;
 		boolean diagonal = linhaDiferente && colunaDiferente;
@@ -38,8 +40,37 @@ public class Campo {
 			vizinhos.add(vizinho);
 			return true;
 		}else {
+			return false;
+		}
+	}
+	public void alternarMarcacao() {
+		if (!aberto) {
+			marcado = !marcado;
+		}
+	}
+	public boolean abrir() {
+		if (!aberto && !marcado) {
+			aberto = true;
+			if(minado ) {
+				throw new ExplosaoException();
+			}
+			if(vizinhaSegura()) {
+				vizinhos.forEach(v -> v.abrir());
+			}
+			return true;
+		} else {
 		return false;
 		}
 	}
+	public boolean vizinhaSegura() {
+		return vizinhos.stream().noneMatch(v -> v.minado);
+	}
+	public void minar() {
+		minado = true;
+	}
+	public boolean isMarcado() {
+		return marcado;
+	}
+	
 	
 }
