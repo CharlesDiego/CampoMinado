@@ -43,7 +43,7 @@ public class Campo {
 			return false;
 		}
 	}
-	public void alternarMarcacao() {
+	  void alternarMarcacao() {
 		if (!aberto) {
 			marcado = !marcado;
 		}
@@ -64,9 +64,13 @@ public class Campo {
 	}
 	public boolean vizinhaSegura() {
 		return vizinhos.stream().noneMatch(v -> v.minado);
+	
 	}
 	public void minar() {
 		minado = true;
+	}
+	public boolean isMinado() {
+		return minado;
 	}
 	public boolean isMarcado() {
 		return marcado;

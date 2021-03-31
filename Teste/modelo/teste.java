@@ -1,4 +1,4 @@
-package testador;
+package modelo;
 
 import static org.junit.Assert.assertFalse;
 

@@ -1,8 +1,8 @@
 package modelo;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Tabuleiro {
 	
@@ -27,6 +27,12 @@ public class Tabuleiro {
 		sortearMinas();
 		
 	}
+	public void altenarMarcacao (int linha, int coluna) {
+		campos.parallelStream()
+		.filter(c-> c.getLinha() == linha && c.getColuna() == coluna)
+		.findFirst()
+		.ifPresent(c -> c.alternarMarcacao());
+	}
 
 	private void gerarCampos() {
 		for (int linha=0; linha< linhas; linha++) {
@@ -42,13 +48,40 @@ public class Tabuleiro {
 		for (Campo c1: campos) {
 			for(Campo c2 : campos) {
 				c1.adicionarVizinho(c2);
+				// Não consigo mentalizar essa criaçao!
 			}
 		}
 		
 	}
 
 	private void sortearMinas() {
-		// TODO Auto-generated method stub
 		
+		long minasArmadas = 0;
+		Predicate<Campo> minado = c-> c.isMinado();
+		
+		do {
+			minasArmadas= campos.stream().filter(minado).count();
+			int aleatorio = (int) (Math.random()*campos.size());
+			campos.get(aleatorio).minar();
+		} while (minasArmadas < minas);
+		
+	}
+	public boolean objetivoAlcancado() {
+		return campos.stream().allMatch(c-> c.objetivoAlcancado());
+	}
+	public void reiniciar() {
+		campos.stream().forEach(c-> c.reiniciar());
+		sortearMinas();
+	}
+	public String toString() {
+		StringBuilder sb= new StringBuilder();
+		for (int l=0; l< linhas; l++) {
+			for (int c=0; c< colunas; c++) {
+				sb.append(" ");
+				sb.append(" ");
+				sb.append(" ");
+			}
+		}	sb.append("\n");
+		return sb.toString();
 	}
 }
