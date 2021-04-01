@@ -27,6 +27,13 @@ public class Tabuleiro {
 		sortearMinas();
 		
 	}
+	public void abrir( int linha, int coluna) {
+		campos.parallelStream()
+		.filter(c-> c.getLinha() == linha && c.getColuna() == coluna)
+		.findFirst()
+		.ifPresent(c-> c.abrir());
+	}
+		
 	public void altenarMarcacao (int linha, int coluna) {
 		campos.parallelStream()
 		.filter(c-> c.getLinha() == linha && c.getColuna() == coluna)
@@ -48,7 +55,7 @@ public class Tabuleiro {
 		for (Campo c1: campos) {
 			for(Campo c2 : campos) {
 				c1.adicionarVizinho(c2);
-				// Não consigo mentalizar essa criaçao!
+				//Gera um campo duas vezes comparando quem é vizinho de quem.
 			}
 		}
 		
@@ -75,13 +82,19 @@ public class Tabuleiro {
 	}
 	public String toString() {
 		StringBuilder sb= new StringBuilder();
+		
+		int i= 0;
 		for (int l=0; l< linhas; l++) {
+			
 			for (int c=0; c< colunas; c++) {
 				sb.append(" ");
+				sb.append(campos.get(i));
 				sb.append(" ");
-				sb.append(" ");
+				i ++;
 			}
-		}	sb.append("\n");
+			sb.append("\n");
+			
+		}	
 		return sb.toString();
 	}
 }
